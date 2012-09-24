@@ -1,20 +1,131 @@
 package sample.application.calculator;
 
-import android.os.Bundle;
+import java.text.DecimalFormat;
+
 import android.app.Activity;
+import android.os.Bundle;
+import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class CalculatorActivity extends Activity {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-    }
+	String strTemp = "";
+	String strResult = "0";
+	int operator = 0;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+	public void numKeyOnClick(View v) {
+
+		String strInKey = (String) ((Button) v).getText();
+
+		if (strInKey.equals(".")) {
+			if (strTemp.length() == 0) {
+				strTemp = "0.";
+			} else {
+				if (strTemp.indexOf(".") == -1) {
+					strTemp = strTemp + ".";
+				}
+			}
+		} else {
+			if (strTemp.length() <= 9) {
+				strTemp = strTemp + strInKey;
+			}
+		}
+
+		showNumber(strTemp);
+	}
+
+	private void showNumber(String strNum) {
+
+		DecimalFormat form = new DecimalFormat("#,##0");
+		Log.d(ACTIVITY_SERVICE,
+				"MaximumIntegerDigits = " + form.getMaximumIntegerDigits());
+		String strDecimal = "";
+		String strInt = "";
+		String fText = "";
+
+		if (strNum.length() > 0) {
+			int decimalPoint = strNum.indexOf(".");
+			if (decimalPoint > -1) {
+				strDecimal = strNum.substring(decimalPoint);
+				strInt = strNum.substring(0, decimalPoint);
+			} else {
+				strInt = strTemp;
+			}
+			fText = form.format(Double.parseDouble(strInt)) + strDecimal;
+		} else {
+			fText = "0";
+		}
+
+		Log.d(getLocalClassName(), "showNumber strNum = " + strNum);
+		Log.d(getLocalClassName(), "showNumber fText = " + fText);
+		((TextView) findViewById(R.id.displayPanel)).setText(fText);
+	}
+
+	public void functionKeyOnClick(View v) {
+		switch (v.getId()) {
+		case R.id.keypadAC:
+			strTemp = "";
+			strResult = "0";
+			operator = 0;
+			break;
+		case R.id.keypadC:
+			strTemp = "";
+			break;
+		case R.id.keypadBS:
+			if (strTemp.length() == 0) {
+				return;
+			} else {
+				strTemp = strTemp.substring(0, strTemp.length() - 1);
+			}
+			break;
+		case R.id.keypadCopy:
+			ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+			cm.setText(((TextView) findViewById(R.id.displayPanel)).getText());
+			return;
+		}
+		showNumber(strTemp);
+	}
+
+	public void operatorKeyOnClick(View v) {
+
+		if (operator != 0) {
+			if (strTemp.length() > 0) {
+				strResult = doCalc();
+				showNumber(strResult);
+			}
+		} else {
+			if (strTemp.length() > 0) {
+				strResult = strTemp;
+			}
+		}
+
+		strTemp = "";
+
+		if (v.getId() == R.id.keypadEq) {
+			operator = 0;
+		} else {
+			operator = v.getId();
+		}
+	}
+
+	private String doCalc() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 }
