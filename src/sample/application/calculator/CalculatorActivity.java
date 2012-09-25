@@ -1,5 +1,7 @@
 package sample.application.calculator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CalculatorActivity extends Activity {
 
@@ -30,9 +33,9 @@ public class CalculatorActivity extends Activity {
 				}
 			}
 		} else {
-			if (strTemp.length() <= 9) {
-				strTemp = strTemp + strInKey;
-			}
+			// if (strTemp.length() <= 9) {
+			strTemp = strTemp + strInKey;
+			// }
 		}
 
 		showNumber(strTemp);
@@ -113,8 +116,37 @@ public class CalculatorActivity extends Activity {
 	}
 
 	private String doCalc() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		BigDecimal bd1 = new BigDecimal(strResult);
+		BigDecimal bd2 = new BigDecimal(strTemp);
+		BigDecimal result = BigDecimal.ZERO;
+
+		switch (operator) {
+		case R.id.keypadAdd:
+			result = bd1.add(bd2);
+			break;
+		case R.id.keypadSub:
+			result = bd1.subtract(bd2);
+			break;
+		case R.id.keypadMulti:
+			result = bd1.multiply(bd2);
+			break;
+		case R.id.keypadDiv:
+			if (!bd2.equals(BigDecimal.ZERO)) {
+				result = bd1.divide(bd2, 12, RoundingMode.FLOOR);
+			} else {
+				Toast toast = Toast.makeText(this, R.string.toast_div_by_zero,
+						1000);
+				toast.show();
+			}
+			break;
+		}
+
+		if (result.toString().indexOf(".") > 0) {
+			return result.toString().replace("\\.0+$|0+$", "");
+		} else {
+			return result.toString();
+		}
+
 	}
 
 	@Override
