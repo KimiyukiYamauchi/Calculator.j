@@ -4,18 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/displayPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:background="#ffffff"
         android:gravity="right"
         android:text="0"
         android:textColor="#000000"
         android:textSize="48sp"
         tools:context=".CalculatorActivity" />
+
+    <TextView
+        android:id="@+id/subPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TableLayout
         android:layout_width="match_parent"

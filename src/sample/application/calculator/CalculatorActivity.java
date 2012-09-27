@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.ClipboardManager;
@@ -24,6 +25,12 @@ public class CalculatorActivity extends Activity {
 	public void numKeyOnClick(View v) {
 
 		((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(50);
+
+		TextView sp = (TextView) findViewById(R.id.subPanel);
+		String strSp = sp.getText().toString();
+		if (strSp.indexOf("=") == sp.length() - 1) {
+			sp.setText("");
+		}
 
 		String strInKey = (String) ((Button) v).getText();
 
@@ -81,6 +88,7 @@ public class CalculatorActivity extends Activity {
 			strTemp = "";
 			strResult = "0";
 			operator = 0;
+			((TextView) findViewById(R.id.subPanel)).setText("");
 			break;
 		case R.id.keypadC:
 			strTemp = "";
@@ -104,10 +112,17 @@ public class CalculatorActivity extends Activity {
 
 		((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(50);
 
+		TextView sp = (TextView) findViewById(R.id.subPanel);
+		String op2 = ((Button) findViewById(v.getId())).getText().toString();
+
 		if (operator != 0) {
+			String op1 = ((Button) findViewById(operator)).getText().toString();
 			if (strTemp.length() > 0) {
+				sp.setText(strResult + op1 + strTemp + op2);
 				strResult = doCalc();
 				showNumber(strResult);
+			} else {
+				sp.setText(strResult + op2);
 			}
 		} else {
 			if (strTemp.length() > 0) {
@@ -168,11 +183,45 @@ public class CalculatorActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		readPreferences();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	void writePreferences() {
+		SharedPreferences prefs = getSharedPreferences("CalcPrefs",
+				MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("strTemp", strTemp);
+		editor.putString("strResult", strResult);
+		editor.putInt("operator", operator);
+		editor.putString("strDisplay",
+				((TextView) findViewById(R.id.displayPanel)).getText()
+						.toString());
+		editor.putString("strSubDisplay",
+				((TextView) findViewById(R.id.subPanel)).getText().toString());
+		editor.commit();
+	}
+
+	void readPreferences() {
+		SharedPreferences prefs = getSharedPreferences("CalcPrefs",
+				MODE_PRIVATE);
+		strTemp = prefs.getString("strTemp", "");
+		strResult = prefs.getString("strResult", "0");
+		operator = prefs.getInt("operator", 0);
+		((TextView) findViewById(R.id.displayPanel)).setText(prefs.getString(
+				"strDisplay", "0"));
+		((TextView) findViewById(R.id.subPanel)).setText(prefs.getString(
+				"strSubDisplay", "0"));
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		writePreferences();
 	}
 }
