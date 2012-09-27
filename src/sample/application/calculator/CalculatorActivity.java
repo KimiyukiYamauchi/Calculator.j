@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,8 @@ public class CalculatorActivity extends Activity {
 	int operator = 0;
 
 	public void numKeyOnClick(View v) {
+
+		((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(50);
 
 		String strInKey = (String) ((Button) v).getText();
 
@@ -56,7 +59,8 @@ public class CalculatorActivity extends Activity {
 				strDecimal = strNum.substring(decimalPoint);
 				strInt = strNum.substring(0, decimalPoint);
 			} else {
-				strInt = strTemp;
+				// strInt = strTemp;
+				strInt = strNum;
 			}
 			fText = form.format(Double.parseDouble(strInt)) + strDecimal;
 		} else {
@@ -69,6 +73,9 @@ public class CalculatorActivity extends Activity {
 	}
 
 	public void functionKeyOnClick(View v) {
+
+		((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(50);
+
 		switch (v.getId()) {
 		case R.id.keypadAC:
 			strTemp = "";
@@ -95,6 +102,8 @@ public class CalculatorActivity extends Activity {
 
 	public void operatorKeyOnClick(View v) {
 
+		((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(50);
+
 		if (operator != 0) {
 			if (strTemp.length() > 0) {
 				strResult = doCalc();
@@ -120,6 +129,10 @@ public class CalculatorActivity extends Activity {
 		BigDecimal bd2 = new BigDecimal(strTemp);
 		BigDecimal result = BigDecimal.ZERO;
 
+		Log.d(getLocalClassName(), "doCalc() strResult = " + strResult);
+		Log.d(getLocalClassName(), "doCalc() strTemp = " + strTemp);
+		Log.d(getLocalClassName(), "doCalc() operator = " + operator);
+
 		switch (operator) {
 		case R.id.keypadAdd:
 			result = bd1.add(bd2);
@@ -140,6 +153,8 @@ public class CalculatorActivity extends Activity {
 			}
 			break;
 		}
+
+		Log.d(getLocalClassName(), "doCalc() result = " + result);
 
 		if (result.toString().indexOf(".") > 0) {
 			return result.toString().replace("\\.0+$|0+$", "");

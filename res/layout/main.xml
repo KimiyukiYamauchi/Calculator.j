@@ -103,11 +103,12 @@
                 android:padding="0dp"
                 android:text="9"
                 android:textSize="24sp" />
-
+
             <Button
                 android:id="@+id/keypadDiv"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="operatorKeyOnClick"
                 android:padding="0dp"
                 android:text="/"
                 android:textSize="24sp" />
@@ -147,11 +148,12 @@
                 android:padding="0dp"
                 android:text="6"
                 android:textSize="24sp" />
-
+
             <Button
                 android:id="@+id/keypadMulti"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="operatorKeyOnClick"
                 android:padding="0dp"
                 android:text="*"
                 android:textSize="24sp" />
@@ -191,11 +193,12 @@
                 android:padding="0dp"
                 android:text="3"
                 android:textSize="24sp" />
-
+
             <Button
                 android:id="@+id/keypadSub"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="operatorKeyOnClick"
                 android:padding="0dp"
                 android:text="-"
                 android:textSize="24sp" />
@@ -226,19 +229,21 @@
                 android:padding="0dp"
                 android:text="."
                 android:textSize="24sp" />
-
+
             <Button
                 android:id="@+id/keypadEq"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="operatorKeyOnClick"
                 android:padding="0dp"
                 android:text="="
                 android:textSize="24sp" />
-
+
             <Button
                 android:id="@+id/keypadAdd"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="operatorKeyOnClick"
                 android:padding="0dp"
                 android:text="+"
                 android:textSize="24sp" />
