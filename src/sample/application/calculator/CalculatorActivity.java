@@ -128,6 +128,7 @@ public class CalculatorActivity extends Activity {
 			if (strTemp.length() > 0) {
 				strResult = strTemp;
 			}
+			sp.setText(strResult + op2);
 		}
 
 		strTemp = "";
